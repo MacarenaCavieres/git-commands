@@ -51,15 +51,11 @@
 }
 
 #root {
-    width: 1126px;
+    width: 1326px;
     max-width: 100%;
     margin: 0 auto;
     min-height: 100svh;
     box-sizing: border-box;
-}
-
-body {
-    margin: 0;
 }
 
 h1,
@@ -89,7 +85,4 @@ h2 {
     @media (max-width: 1024px) {
         font-size: 20px;
     }
-}
-p {
-    margin: 0;
 }

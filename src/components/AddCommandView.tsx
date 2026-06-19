@@ -1,12 +1,17 @@
 import { useForm } from "react-hook-form";
 import type { DraftCommand } from "../types/types";
 import ErrorsMessage from "./ErrorsMessage";
-import { useGitCommandStore } from "../store";
+import { useGitCommandStore } from "../store/store";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 function AddCommandView() {
     const closeAddView = useGitCommandStore((state) => state.closeAddView);
     const addCommand = useGitCommandStore((state) => state.addCommand);
+    const activeIdUpdate = useGitCommandStore((state) => state.activeIdUpdate);
+    const commandFounded = useGitCommandStore((state) => state.commandFounded);
+    const updateCommand = useGitCommandStore((state) => state.updateCommand);
+
     const initialValues: DraftCommand = {
         alias: "",
         command: "",
@@ -16,15 +21,31 @@ function AddCommandView() {
     const {
         register,
         reset,
+        setValue,
         handleSubmit,
         formState: { errors },
     } = useForm<DraftCommand>({ defaultValues: initialValues });
 
     const handleAddCommand = (formData: DraftCommand) => {
-        addCommand(formData);
-        reset();
-        toast.success("Comando agregado");
+        if (activeIdUpdate) {
+            updateCommand(formData);
+            reset();
+            toast.warning("Comando editado");
+            closeAddView();
+        } else {
+            addCommand(formData);
+            reset();
+            toast.success("Comando agregado");
+        }
     };
+
+    useEffect(() => {
+        if (activeIdUpdate) {
+            setValue("alias", commandFounded.alias);
+            setValue("command", commandFounded.command);
+            setValue("description", commandFounded.description);
+        }
+    }, [activeIdUpdate]);
     return (
         <div className="flex flex-col mx-auto max-w-3xl">
             <div className="flex justify-end">
@@ -45,7 +66,7 @@ function AddCommandView() {
                         "0 0 6px #723EC3, 0 0 20px #723EC3, 0 0 45px rgba(114,62,195,0.8), 0 0 70px rgba(114,62,195,0.6)",
                 }}
             >
-                Agregar comando
+                {activeIdUpdate ? "Actualizar comando" : "Agregar comando"}
             </h2>
             <form className="flex flex-col space-y-6" onSubmit={handleSubmit(handleAddCommand)}>
                 <div className="flex flex-col gap-2">
@@ -56,7 +77,7 @@ function AddCommandView() {
                         type="text"
                         placeholder="Ingrese el alias del comando"
                         id="alias"
-                        className="border rounded-xl p-2 placeholder-[#607B8F]"
+                        className="border rounded-xl p-4 placeholder-[#607B8F]"
                         {...register("alias")}
                     />
                     {errors.alias && <ErrorsMessage>{errors.alias.message}</ErrorsMessage>}
@@ -69,7 +90,7 @@ function AddCommandView() {
                         type="text"
                         placeholder="Ingrese el comando de git"
                         id="command"
-                        className="border rounded-xl p-2 placeholder-[#607B8F]"
+                        className="border rounded-xl p-4 placeholder-[#607B8F]"
                         {...register("command", {
                             required: "El comando de git es obligatorio",
                         })}
@@ -84,12 +105,12 @@ function AddCommandView() {
                         rows={10}
                         placeholder="Ingrese una descipción del comando"
                         id="description"
-                        className="border rounded-xl p-2 placeholder-[#607B8F]"
+                        className="border rounded-xl p-4 placeholder-[#607B8F]"
                         {...register("description", {
-                            required: "La descripción del comando es obligatorio",
+                            required: "La descripción del comando es obligatoria",
                         })}
                     />
-                    {errors.command && <ErrorsMessage>{errors.command.message}</ErrorsMessage>}
+                    {errors.description && <ErrorsMessage>{errors.description.message}</ErrorsMessage>}
                 </div>
                 <div className="flex justify-end">
                     <button
@@ -97,7 +118,7 @@ function AddCommandView() {
                 hover:shadow-[0_0_30px_rgba(114,62,195,0.8),inset_0_0_20px_rgba(114,62,195,0.6)] transition-shadow duration-300 w-3/12 mt-10"
                         type="submit"
                     >
-                        Agregar
+                        {activeIdUpdate ? "Actualizar" : "Agregar"}
                     </button>
                 </div>
             </form>
