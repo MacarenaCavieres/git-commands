@@ -20,6 +20,7 @@ type GitCommandState = {
     closeAddView: () => void;
     openConfirmModal: () => void;
     closeConfirmModal: () => void;
+    setGitCommands: (newCommands: Command[]) => void;
 };
 
 const createGitCommand = (gitCommand: DraftCommand) => {
@@ -96,6 +97,11 @@ export const useGitCommandStore = create<GitCommandState>()(
                         isConfirmModalOpen: false,
                         commandForDelete: "",
                         commandFounded: {} as Command,
+                    }));
+                },
+                setGitCommands: (newCommands: Command[]) => {
+                    set(() => ({
+                        gitCommands: newCommands,
                     }));
                 },
             }),
