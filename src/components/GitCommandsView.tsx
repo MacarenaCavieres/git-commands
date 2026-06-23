@@ -114,7 +114,7 @@ function GitCommandsView() {
                                 const currentCommands = isFiltering ? gitCommandsFiltered : gitCommands;
                                 return (
                                     <tbody {...provided.droppableProps} ref={provided.innerRef}>
-                                        {currentCommands.length &&
+                                        {currentCommands.length > 0 &&
                                             currentCommands.map((command, index) => {
                                                 const aliasKey = `${command.id}-alias`;
                                                 const commandKey = `${command.id}-command`;
