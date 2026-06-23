@@ -1,12 +1,14 @@
 import { create } from "zustand";
-import type { Command, DraftCommand } from "../types/types";
+import type { Command, DraftCommand, FilterType } from "../types/types";
 import { v4 as uuidv4 } from "uuid";
 import { devtools, persist } from "zustand/middleware";
 
 type GitCommandState = {
     gitCommands: Command[];
+    gitCommandsFiltered: Command[];
     isAddCommandOpen: boolean;
     isConfirmModalOpen: boolean;
+    isFiltering: boolean;
     activeIdUpdate: Command["id"];
     commandFounded: Command;
     commandForDelete: Command["id"];
@@ -21,6 +23,9 @@ type GitCommandState = {
     openConfirmModal: () => void;
     closeConfirmModal: () => void;
     setGitCommands: (newCommands: Command[]) => void;
+    setFilter: (filter: FilterType) => void;
+    search: (filter: FilterType) => void;
+    setNotFiltering: () => void;
 };
 
 const createGitCommand = (gitCommand: DraftCommand) => {
@@ -35,11 +40,14 @@ export const useGitCommandStore = create<GitCommandState>()(
         persist(
             (set) => ({
                 gitCommands: [],
+                gitCommandsFiltered: [],
                 isAddCommandOpen: false,
                 isConfirmModalOpen: false,
+                isFiltering: false,
                 activeIdUpdate: "",
                 commandFounded: {} as Command,
                 commandForDelete: "",
+                filter: {} as FilterType,
                 addCommand: (data) => {
                     const newCommand = createGitCommand(data);
                     set((state) => ({
@@ -102,6 +110,28 @@ export const useGitCommandStore = create<GitCommandState>()(
                 setGitCommands: (newCommands: Command[]) => {
                     set(() => ({
                         gitCommands: newCommands,
+                    }));
+                },
+                setFilter: (newFilter: FilterType) => {
+                    set(() => ({
+                        filter: newFilter,
+                        isFiltering: true,
+                    }));
+                },
+                search: (newFilter: FilterType) => {
+                    set((state) => ({
+                        isFiltering: true,
+                        gitCommandsFiltered: state.gitCommands.filter((c) => {
+                            const isAliasIncludeed = c.alias?.includes(newFilter.filter) ? true : false;
+                            const isCommandIncluded = c.command?.includes(newFilter.filter) ? true : false;
+                            const isDescriptionIncluded = c.description?.includes(newFilter.filter) ? true : false;
+                            return isAliasIncludeed || isCommandIncluded || isDescriptionIncluded;
+                        }),
+                    }));
+                },
+                setNotFiltering: () => {
+                    set(() => ({
+                        isFiltering: false,
                     }));
                 },
             }),

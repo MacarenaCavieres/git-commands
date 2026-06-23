@@ -10,3 +10,7 @@ export type Command = {
     command: string;
     description: string;
 };
+
+export type FilterType = {
+    filter: string;
+};
