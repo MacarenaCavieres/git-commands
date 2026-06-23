@@ -7,8 +7,8 @@ function Filter() {
     const initialValues: FilterType = { filter: "" };
 
     const isFiltering = useGitCommandStore((state) => state.isFiltering);
-    const setFilter = useGitCommandStore((state) => state.setFilter);
     const setNotFiltering = useGitCommandStore((state) => state.setNotFiltering);
+    const search = useGitCommandStore((state) => state.search);
 
     const {
         register,
@@ -18,7 +18,11 @@ function Filter() {
     } = useForm({ defaultValues: initialValues });
 
     const handleSearch = (formData: FilterType) => {
-        setFilter(formData);
+        search(formData);
+    };
+
+    const handleClear = () => {
+        setNotFiltering();
         reset();
     };
     return (
@@ -55,7 +59,7 @@ function Filter() {
                         transition-all duration-300 hover:text-white shrink-0"
                         type="button"
                         style={{ textShadow: "0 0 4px rgba(255,106,28,0.3)" }}
-                        onClick={setNotFiltering}
+                        onClick={handleClear}
                     >
                         Ver todo
                     </button>

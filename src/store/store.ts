@@ -23,7 +23,6 @@ type GitCommandState = {
     openConfirmModal: () => void;
     closeConfirmModal: () => void;
     setGitCommands: (newCommands: Command[]) => void;
-    setFilter: (filter: FilterType) => void;
     search: (filter: FilterType) => void;
     setNotFiltering: () => void;
 };
@@ -110,12 +109,6 @@ export const useGitCommandStore = create<GitCommandState>()(
                 setGitCommands: (newCommands: Command[]) => {
                     set(() => ({
                         gitCommands: newCommands,
-                    }));
-                },
-                setFilter: (newFilter: FilterType) => {
-                    set(() => ({
-                        filter: newFilter,
-                        isFiltering: true,
                     }));
                 },
                 search: (newFilter: FilterType) => {

@@ -68,15 +68,15 @@ function ConfirmModal() {
 
                 <div className="flex gap-4 justify-center mt-6">
                     <button
-                        className="border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-all duration-200"
+                        className="border border-[#FF0052] bg-[#FF0052]/10 hover:bg-[#FF0052] text-[#FF0052] hover:text-white px-5 py-2 rounded-xl text-sm font-medium cursor-pointer 
+                        transition-all duration-300 shadow-[0_0_10px_rgba(255,0,82,0.2)] hover:shadow-[0_0_20px_rgba(255,0,82,0.6)]"
                         type="button"
                         onClick={() => deleteCommand(commandFounded.id)}
                     >
                         Eliminar
                     </button>
                     <button
-                        className="border border-[#FF0052] bg-[#FF0052]/10 hover:bg-[#FF0052] text-[#FF0052] hover:text-white px-5 py-2 rounded-xl text-sm font-medium cursor-pointer 
-                        transition-all duration-300 shadow-[0_0_10px_rgba(255,0,82,0.2)] hover:shadow-[0_0_20px_rgba(255,0,82,0.6)]"
+                        className="border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white px-4 py-2 rounded-xl text-sm font-medium cursor-pointer transition-all duration-200"
                         type="button"
                         onClick={closeConfirmModal}
                     >
